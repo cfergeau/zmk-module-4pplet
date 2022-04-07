@@ -19,7 +19,7 @@ LOG_MODULE_DECLARE(zmk, CONFIG_ZMK_LOG_LEVEL);
 #include <zmk/event_manager.h>
 #include <zmk/events/ble_active_profile_changed.h>
 
-#define BUZZER_NODE DT_ALIAS(buzzer)
+#define DT_ALIAS(buzzer)
 
 #if !DT_NODE_HAS_STATUS(BUZZER_NODE, okay)
 #error "Unsupported board: buzzer devicetree alias is not defined"
