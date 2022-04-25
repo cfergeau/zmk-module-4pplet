@@ -89,7 +89,6 @@
         status = "okay";
     };
 	
-
 	/* These aliases are provided for compatibility with samples */
 	aliases {
 		ledgreen = &led_0;
@@ -150,19 +149,25 @@ RC(9,6) // rotary sw
 };
 
 &gpio0 {
-	status = "okay";
+    status = "okay";
 };
 
 &gpio1 {
-	status = "okay";
+    status = "okay";
 };
 
 &adc {
-	status = "okay";
+    status = "okay";
 };
 
 &usbd {
-	status = "okay";
+    status = "okay";
+};
+
+&pwm0 {
+	ch0-pin = <23>;
+    ch0-inverted;
+    status = "okay";
 };
 
 &spi0 {
