@@ -1,4 +1,4 @@
-/*
+/* Copyright (c) 2021 Megamind (megamind4089)
  * Copyright (c) 2021 The ZMK Contributors
  *
  * SPDX-License-Identifier: Apache-2.0
