@@ -63,16 +63,16 @@
 				status = "okay";
 			};
 		};
-/*
+
 
 	// PWM buzzer config
     buzzer: pwm_buzzer {
         compatible = "pwm-buzzer";
         label = "PWM BUZZER";
-        pwms = <&pwm0>;
-        status = "okay";
+		pwms = <&pwm0 23 PWM_MSEC(20) PWM_POLARITY_NORMAL>;
+
     };
-	
+	/*
 	pwmleds {
 		compatible = "pwm-leds";
 		pwm_led_0: pwm_led_green { // P0.07
@@ -91,17 +91,18 @@
 			status = "okay";
 		};
 	};
+	*/
 	// These aliases are provided for compatibility with samples
 	aliases {
-		ledgreen = &led_0;
-		ledred   = &led_1;
-		ledblue  = &led_2;
-		pwmledgreen = &pwm_led_0;
-		pwmledred = &pwm_led_1;
-		pwmledblue = &pwm_led_2;
+		//ledgreen = &led_0;
+		//ledred   = &led_1;
+		//ledblue  = &led_2;
+		//pwmledgreen = &pwm_led_0;
+		//pwmledred = &pwm_led_1;
+		//pwmledblue = &pwm_led_2;
 		buzzer = &buzzer;
 	};
-*/
+
 	ext-power {
 		compatible = "zmk,ext-power-generic";
 		label = "EXT_POWER";
@@ -166,16 +167,11 @@ RC(9,6) // rotary sw
 	status = "okay";
 };
 
+
 &pwm0 {
     pinctrl-0 = <&pwm0_default>;
     pinctrl-names = "default";
     status = "okay";
-
-	buzzer: pwm_buzzer {
-        compatible = "pwm-buzzer";
-        label = "PWM BUZZER";
-		pwms = <&pwm0 23 PWM_MSEC(20) PWM_POLARITY_NORMAL>;
-	};
 };
 
 &spi0 {
