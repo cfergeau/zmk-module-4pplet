@@ -4,15 +4,14 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-#include <zephyr.h>
-#include <kernel.h>
-#include <device.h>
-#include <devicetree.h>
-#include <drivers/pwm.h>
+#include <zephyr/kernel.h>
+#include <zephyr/device.h>
+#include <zephyr/devicetree.h>
+#include <zephyr/drivers/pwm.h>
 
-#include <bluetooth/services/bas.h>
+#include <zephyr/bluetooth/services/bas.h>
 
-#include <logging/log.h>
+#include <zephyr/logging/log.h>
 LOG_MODULE_DECLARE(zmk, CONFIG_ZMK_LOG_LEVEL);
 
 #include <zmk/ble.h>
@@ -40,10 +39,14 @@ LOG_MODULE_DECLARE(zmk, CONFIG_ZMK_LOG_LEVEL);
 
 void _play(const struct device *pwm, uint32_t period)
 {
-    pwm_pin_set_usec(pwm, BUZZ_CHANNEL, period, period / 2U, BUZZ_FLAGS);
+    //pwm_pin_set_usec(pwm, BUZZ_CHANNEL, period, period / 2U, BUZZ_FLAGS); old implementation, depricated
+    pwm_set(pwm, BUZZ_CHANNEL, period, period / 2U, BUZZ_FLAGS);  //need mod for NS?
+    //pwm_set_dt(&pwm_led0, period, period / 2U)
+    //pwm_set (const struct device *dev, uint32_t channel, uint32_t period, uint32_t pulse, pwm_flags_t flags)
     k_sleep(BEEP_DURATION);
 
-    pwm_pin_set_usec(pwm, BUZZ_CHANNEL, 0, 0, BUZZ_FLAGS);
+    //pwm_pin_set_usec(pwm, BUZZ_CHANNEL, 0, 0, BUZZ_FLAGS); old implementation, depricated
+    pwm_set(pwm, BUZZ_CHANNEL, 0, 0, BUZZ_FLAGS); //need mod for NS?
     k_sleep(K_MSEC(50));
 
 }
@@ -80,7 +83,7 @@ void play_sound_4(const struct device *pwm)
 void play_sound_5(const struct device *pwm)
 {
     _play(pwm, 2500);
-    _play(pwm, 3900);
+    _play(pwm, 3900);               
 }
 
 int buzzer_listener(const zmk_event_t *eh)
@@ -93,7 +96,8 @@ int buzzer_listener(const zmk_event_t *eh)
         return ZMK_EV_EVENT_BUBBLE;
     }
 
-    pwm = device_get_binding(BUZZ_LABEL);
+    //pwm = device_get_binding(BUZZ_LABEL); old implementation
+    pwm = DEVICE_DT_GET(BUZZ_LABEL);
     if (NULL == pwm) {
         return ZMK_EV_EVENT_BUBBLE;
     }

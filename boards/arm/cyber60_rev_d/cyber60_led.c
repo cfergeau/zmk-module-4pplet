@@ -4,21 +4,21 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-#include <zephyr.h>
-#include <kernel.h>
-#include <device.h>
-#include <devicetree.h>
-#include <drivers/gpio.h>
+//#include <zephyr/zephyr.h>
+#include <zephyr/kernel.h>
+#include <zephyr/device.h>
+#include <zephyr/devicetree.h>
+#include <zephyr/drivers/gpio.h>
 
-#include <bluetooth/services/bas.h>
+#include <zephyr/bluetooth/services/bas.h>
 
-#include <logging/log.h>
+#include <zephyr/logging/log.h>
 LOG_MODULE_DECLARE(zmk, CONFIG_ZMK_LOG_LEVEL);
 
 #include <zmk/ble.h>
 #include <zmk/event_manager.h>
 #include <zmk/events/ble_active_profile_changed.h>
-
+/*
 #define LED_NODE_R DT_ALIAS(ledred)
 #define LED_NODE_G DT_ALIAS(ledgreen)
 #define LED_NODE_B DT_ALIAS(ledblue)
@@ -66,7 +66,8 @@ static const size_t led_size = sizeof(leds)/sizeof(leds[0]);
 void reset_leds()
 {
     for (int index = 0; index < led_size; index++) {
-        const struct device *dev = device_get_binding(leds[index].name);
+        //const struct device *dev = device_get_binding(leds[index].name);
+        const struct device *dev = DEVICE_DT_GET(leds[index].name);
         if (dev == NULL) {
             return;
         }
@@ -76,7 +77,8 @@ void reset_leds()
 
 void set_led(size_t index)
 {
-    const struct device *dev = device_get_binding(leds[index].name);
+    //const struct device *dev = device_get_binding(leds[index].name);
+    const struct device *dev = DEVICE_DT_GET(leds[index].name);
     if (dev == NULL) {
         return;
     }
@@ -87,12 +89,14 @@ static int pwr_led_init(const struct device *dev) {
     int ret;
 
     for (int index=0; index < sizeof(leds)/sizeof(leds[0]); index++) {
-        dev = device_get_binding(leds[index].name);
+        //dev = device_get_binding(leds[index].name);
+        dev = DEVICE_DT_GET(leds[index].name);
         if (dev == NULL) {
             return -EIO;
         }
 
-        ret = gpio_pin_configure(dev, leds[index].pin, GPIO_OUTPUT | leds[index].flags);
+        //ret = gpio_pin_configure(dev, leds[index].pin, GPIO_OUTPUT | leds[index].flags);
+        ret = DEVICE_DT_GET(dev, leds[index].pin, GPIO_OUTPUT | leds[index].flags);
         if (ret < 0) {
             return -EIO;
         }
@@ -161,3 +165,5 @@ ZMK_LISTENER(led_output_status, led_listener)
 #endif
 
 SYS_INIT(pwr_led_init, APPLICATION, CONFIG_APPLICATION_INIT_PRIORITY);
+
+*/
