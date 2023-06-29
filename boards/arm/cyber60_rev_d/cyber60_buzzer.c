@@ -88,16 +88,15 @@ void play_sound_5(const struct device *pwm)
 
 int buzzer_listener(const zmk_event_t *eh)
 {
-
     const struct zmk_ble_active_profile_changed *profile_ev = NULL;
     const struct device *pwm;
 
     if ((profile_ev = as_zmk_ble_active_profile_changed(eh)) == NULL) {
         return ZMK_EV_EVENT_BUBBLE;
     }
-/*
     //pwm = device_get_binding(BUZZ_LABEL); old implementation
-    pwm = DEVICE_DT_GET(BUZZ_LABEL);
+    pwm = DEVICE_DT_GET(DT_NODELABEL(BUZZ_LABEL));
+    /*
     if (NULL == pwm) {
         return ZMK_EV_EVENT_BUBBLE;
     }
@@ -123,7 +122,6 @@ int buzzer_listener(const zmk_event_t *eh)
     }
     */
     return ZMK_EV_EVENT_BUBBLE;
-    
 }
 
 ZMK_LISTENER(buzzer_output_status, buzzer_listener)
