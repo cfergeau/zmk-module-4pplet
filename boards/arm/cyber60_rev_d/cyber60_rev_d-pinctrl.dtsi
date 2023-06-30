@@ -4,15 +4,27 @@
  */
 
 &pinctrl {
-    spi0_default: spi0_default {
+    spi3_default: spi3_default {
+        group1 {
+            psels = <NRF_PSEL(SPIM_MOSI, 0, 4)>; // SPI P0,04
+        };
+    };
+    spi3_sleep: spi3_sleep {
         group1 {
             psels = <NRF_PSEL(SPIM_MOSI, 0, 4)>;
+            low-power-enable;
         };
     };
     pwm0_default: pwm0_default {
 		group1 {
-			psels = <NRF_PSEL(PWM_OUT0, 0, 23)>;
-            //<&gpio0 23 GPIO_ACTIVE_LOW>;
+			psels = <NRF_PSEL(PWM_OUT0, 0, 23)>;//<&gpio0 23 GPIO_ACTIVE_LOW>;
 		};
 	};
+        pwm0_sleep: pwm0_sleep {
+		group1 {
+			psels = <NRF_PSEL(PWM_OUT0, 0, 23)>;//<&gpio0 23 GPIO_ACTIVE_LOW>
+            low-power-enable;
+		};
+	};
+
 };

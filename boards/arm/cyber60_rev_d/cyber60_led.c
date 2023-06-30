@@ -72,7 +72,6 @@ void reset_leds()
 {
     for (int index = 0; index < led_size; index++) {
         const struct device *dev = device_get_binding(leds[index].name);
-        //const struct device *dev = DEVICE_DT_GET(DT_ALIAS(leds[index].name));
         if (dev == NULL) {
             return;
         }
@@ -82,7 +81,6 @@ void reset_leds()
 void set_led(size_t index)
 {
     const struct device *dev = device_get_binding(leds[index].name);
-    //const struct device *dev = DEVICE_DT_GET(leds[index].name);
     if (dev == NULL) {
         return;
     }
@@ -94,13 +92,11 @@ static int pwr_led_init(const struct device *dev) {
 
     for (int index=0; index < sizeof(leds)/sizeof(leds[0]); index++) {
         dev = device_get_binding(leds[index].name);
-        //dev = DEVICE_DT_GET(leds[index].name);
         if (dev == NULL) {
             return -EIO;
         }
 
         ret = gpio_pin_configure(dev, leds[index].pin, GPIO_OUTPUT | leds[index].flags);
-        //ret = DEVICE_DT_GET(dev, leds[index].pin, GPIO_OUTPUT | leds[index].flags);
         if (ret < 0) {
             return -EIO;
         }
