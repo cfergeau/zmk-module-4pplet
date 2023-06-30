@@ -27,7 +27,7 @@ LOG_MODULE_DECLARE(zmk, CONFIG_ZMK_LOG_LEVEL);
 #define BUZZ_FLAGS 0
 #else
 //#define BUZZ_LABEL DT_LABEL(DT_PWMS_CTLR(BUZZER_NODE)) // DT_LABEL DEPRICATED!
-#define BUZZ_LABEL DEVICE_DT_GET(DT_GPIO_CTLR(BUZZER_NODE,0)) // this gets wrong!
+#define BUZZ_LABEL DT_PROP(BUZZER_NODE, label) // this gets wrong!
 #define BUZZ_CHANNEL DT_PWMS_CHANNEL(BUZZER_NODE)
 #define BUZZ_FLAGS DT_PWMS_FLAGS(BUZZER_NODE)
 #endif
@@ -105,19 +105,19 @@ int buzzer_listener(const zmk_event_t *eh)
 
     switch(profile_ev->index) {
         case 0:
-            play_sound_1(pwm);
+            play_sound_1(*pwm);
             break;
         case 1:
-            play_sound_2(pwm);
+            play_sound_2(*pwm);
             break;
         case 2:
-            play_sound_3(pwm);
+            play_sound_3(*pwm);
             break;
         case 3:
-            play_sound_4(pwm);
+            play_sound_4(*pwm);
             break;
         case 4:
-            play_sound_5(pwm);
+            play_sound_5(*pwm);
             break;
         default:
             break;

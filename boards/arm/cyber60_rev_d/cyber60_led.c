@@ -19,7 +19,7 @@ LOG_MODULE_DECLARE(zmk, CONFIG_ZMK_LOG_LEVEL);
 #include <zmk/event_manager.h>
 #include <zmk/events/ble_active_profile_changed.h>
 
-#define LED_NODE_R DT_ALIAS(ledred)
+#define LED_NODE_R DT_ALIAS(ledred) 
 #define LED_NODE_G DT_ALIAS(ledgreen)
 #define LED_NODE_B DT_ALIAS(ledblue)
 
@@ -31,18 +31,21 @@ LOG_MODULE_DECLARE(zmk, CONFIG_ZMK_LOG_LEVEL);
 #endif
 #endif
 
-#define LED_R DEVICE_DT_GET(DT_GPIO_CTLR(LED_NODE_R, gpios))
-//#define LED_R DT_GPIO_LABEL(LED_NODE_R, gpios)
+//#define LED_R DEVICE_DT_GET(DT_GPIO_CTLR(LED_NODE_R, gpios))
+#define LED_R DT_PROP(LED_NODE_R, label)
+//#define LED_R DT_GPIO_LABEL(LED_NODE_R, gpios) // old implementatino, depricated
 #define PIN_R DT_GPIO_PIN(LED_NODE_R, gpios)
 #define FLAGS_R DT_GPIO_FLAGS(LED_NODE_R, gpios)
 
-#define LED_G DEVICE_DT_GET(DT_GPIO_CTLR(LED_NODE_G, gpios))
-//#define LED_G DT_GPIO_LABEL(LED_NODE_G, gpios)
+//#define LED_G DEVICE_DT_GET(DT_GPIO_CTLR(LED_NODE_G, gpios))
+#define LED_G DT_PROP(LED_NODE_G, label)
+//#define LED_G DT_GPIO_LABEL(LED_NODE_G, gpios) // old implementatino, depricated
 #define PIN_G DT_GPIO_PIN(LED_NODE_G, gpios)
 #define FLAGS_G DT_GPIO_FLAGS(LED_NODE_G, gpios)
 
-#define LED_B DEVICE_DT_GET(DT_GPIO_CTLR(LED_NODE_B, gpios))
-//#define LED_B DT_GPIO_LABEL(LED_NODE_B, gpios)
+//#define LED_B DEVICE_DT_GET(DT_GPIO_CTLR(LED_NODE_B, gpios))
+#define LED_B DT_PROP(LED_NODE_B, label)
+//#define LED_B DT_GPIO_LABEL(LED_NODE_B, gpios) // old implementatino, depricated
 #define PIN_B DT_GPIO_PIN(LED_NODE_B, gpios)
 #define FLAGS_B DT_GPIO_FLAGS(LED_NODE_B, gpios)
 
