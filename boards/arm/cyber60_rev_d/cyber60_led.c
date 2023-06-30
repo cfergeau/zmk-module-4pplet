@@ -18,7 +18,7 @@ LOG_MODULE_DECLARE(zmk, CONFIG_ZMK_LOG_LEVEL);
 #include <zmk/ble.h>
 #include <zmk/event_manager.h>
 #include <zmk/events/ble_active_profile_changed.h>
-/*
+
 #define LED_NODE_R DT_ALIAS(ledred)
 #define LED_NODE_G DT_ALIAS(ledgreen)
 #define LED_NODE_B DT_ALIAS(ledblue)
@@ -31,15 +31,18 @@ LOG_MODULE_DECLARE(zmk, CONFIG_ZMK_LOG_LEVEL);
 #endif
 #endif
 
-#define LED_R DT_GPIO_LABEL(LED_NODE_R, gpios)
+#define LED_R DEVICE_DT_GET(DT_GPIO_CTLR(LED_NODE_R, gpios))
+//#define LED_R DT_GPIO_LABEL(LED_NODE_R, gpios)
 #define PIN_R DT_GPIO_PIN(LED_NODE_R, gpios)
 #define FLAGS_R DT_GPIO_FLAGS(LED_NODE_R, gpios)
 
-#define LED_G DT_GPIO_LABEL(LED_NODE_G, gpios)
+#define LED_G DEVICE_DT_GET(DT_GPIO_CTLR(LED_NODE_G, gpios))
+//#define LED_G DT_GPIO_LABEL(LED_NODE_G, gpios)
 #define PIN_G DT_GPIO_PIN(LED_NODE_G, gpios)
 #define FLAGS_G DT_GPIO_FLAGS(LED_NODE_G, gpios)
 
-#define LED_B DT_GPIO_LABEL(LED_NODE_B, gpios)
+#define LED_B DEVICE_DT_GET(DT_GPIO_CTLR(LED_NODE_B, gpios))
+//#define LED_B DT_GPIO_LABEL(LED_NODE_B, gpios)
 #define PIN_B DT_GPIO_PIN(LED_NODE_B, gpios)
 #define FLAGS_B DT_GPIO_FLAGS(LED_NODE_B, gpios)
 
@@ -49,7 +52,6 @@ typedef struct cyber60_led {
     gpio_pin_t pin;
     gpio_flags_t flags;
 } cyber60_led_t;
-
 
 static const cyber60_led_t leds[] = {
     {LED_R, PIN_R, FLAGS_R},
@@ -66,19 +68,18 @@ static const size_t led_size = sizeof(leds)/sizeof(leds[0]);
 void reset_leds()
 {
     for (int index = 0; index < led_size; index++) {
-        //const struct device *dev = device_get_binding(leds[index].name);
-        const struct device *dev = DEVICE_DT_GET(leds[index].name);
+        const struct device *dev = device_get_binding(leds[index].name);
+        //const struct device *dev = DEVICE_DT_GET(DT_ALIAS(leds[index].name));
         if (dev == NULL) {
             return;
         }
         gpio_pin_set(dev, leds[index].pin, false);
     }
 }
-
 void set_led(size_t index)
 {
-    //const struct device *dev = device_get_binding(leds[index].name);
-    const struct device *dev = DEVICE_DT_GET(leds[index].name);
+    const struct device *dev = device_get_binding(leds[index].name);
+    //const struct device *dev = DEVICE_DT_GET(leds[index].name);
     if (dev == NULL) {
         return;
     }
@@ -89,14 +90,14 @@ static int pwr_led_init(const struct device *dev) {
     int ret;
 
     for (int index=0; index < sizeof(leds)/sizeof(leds[0]); index++) {
-        //dev = device_get_binding(leds[index].name);
-        dev = DEVICE_DT_GET(leds[index].name);
+        dev = device_get_binding(leds[index].name);
+        //dev = DEVICE_DT_GET(leds[index].name);
         if (dev == NULL) {
             return -EIO;
         }
 
-        //ret = gpio_pin_configure(dev, leds[index].pin, GPIO_OUTPUT | leds[index].flags);
-        ret = DEVICE_DT_GET(dev, leds[index].pin, GPIO_OUTPUT | leds[index].flags);
+        ret = gpio_pin_configure(dev, leds[index].pin, GPIO_OUTPUT | leds[index].flags);
+        //ret = DEVICE_DT_GET(dev, leds[index].pin, GPIO_OUTPUT | leds[index].flags);
         if (ret < 0) {
             return -EIO;
         }
@@ -166,4 +167,3 @@ ZMK_LISTENER(led_output_status, led_listener)
 
 SYS_INIT(pwr_led_init, APPLICATION, CONFIG_APPLICATION_INIT_PRIORITY);
 
-*/

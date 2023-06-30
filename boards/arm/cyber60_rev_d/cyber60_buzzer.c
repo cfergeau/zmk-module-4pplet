@@ -26,7 +26,8 @@ LOG_MODULE_DECLARE(zmk, CONFIG_ZMK_LOG_LEVEL);
 #define BUZZ_CHANNEL 0
 #define BUZZ_FLAGS 0
 #else
-#define BUZZ_LABEL DT_LABEL(DT_PWMS_CTLR(BUZZER_NODE))
+//#define BUZZ_LABEL DT_LABEL(DT_PWMS_CTLR(BUZZER_NODE)) // DT_LABEL DEPRICATED!
+#define BUZZ_LABEL DEVICE_DT_GET(DT_GPIO_CTLR(BUZZER_NODE,0)) // this gets wrong!
 #define BUZZ_CHANNEL DT_PWMS_CHANNEL(BUZZER_NODE)
 #define BUZZ_FLAGS DT_PWMS_FLAGS(BUZZER_NODE)
 #endif
@@ -37,21 +38,21 @@ LOG_MODULE_DECLARE(zmk, CONFIG_ZMK_LOG_LEVEL);
 
 #define BEEP_DURATION  K_MSEC(60)
 
-void _play(const struct device *pwm, uint32_t period)
+void _play(const struct device pwm, uint32_t period)
 {
     //pwm_pin_set_usec(pwm, BUZZ_CHANNEL, period, period / 2U, BUZZ_FLAGS); old implementation, depricated
-    pwm_set(pwm, BUZZ_CHANNEL, period, period / 2U, BUZZ_FLAGS);  //need mod for NS?
+    pwm_set(&pwm, BUZZ_CHANNEL, period, period / 2U, BUZZ_FLAGS);  //need mod for NS?
     //pwm_set_dt(&pwm_led0, period, period / 2U)
     //pwm_set (const struct device *dev, uint32_t channel, uint32_t period, uint32_t pulse, pwm_flags_t flags)
     k_sleep(BEEP_DURATION);
 
     //pwm_pin_set_usec(pwm, BUZZ_CHANNEL, 0, 0, BUZZ_FLAGS); old implementation, depricated
-    pwm_set(pwm, BUZZ_CHANNEL, 0, 0, BUZZ_FLAGS); //need mod for NS?
+    pwm_set(&pwm, BUZZ_CHANNEL, 0, 0, BUZZ_FLAGS); //need mod for NS?
     k_sleep(K_MSEC(50));
 
 }
 
-void play_sound_1(const struct device *pwm)
+void play_sound_1(const struct device pwm)
 {
     _play(pwm, 1000);
     _play(pwm, 500);
@@ -60,7 +61,7 @@ void play_sound_1(const struct device *pwm)
     _play(pwm, 50);
 }
 
-void play_sound_2(const struct device *pwm)
+void play_sound_2(const struct device pwm)
 {
     _play(pwm, 1500);
     _play(pwm, 3900);
@@ -68,19 +69,19 @@ void play_sound_2(const struct device *pwm)
     _play(pwm, 1500);
 }
 
-void play_sound_3(const struct device *pwm)
+void play_sound_3(const struct device pwm)
 {
     _play(pwm, 1500);
     _play(pwm, 3900);
 }
 
-void play_sound_4(const struct device *pwm)
+void play_sound_4(const struct device pwm)
 {
     _play(pwm, 2000);
     _play(pwm, 3900);
 }
 
-void play_sound_5(const struct device *pwm)
+void play_sound_5(const struct device pwm)
 {
     _play(pwm, 2500);
     _play(pwm, 3900);               
@@ -89,14 +90,15 @@ void play_sound_5(const struct device *pwm)
 int buzzer_listener(const zmk_event_t *eh)
 {
     const struct zmk_ble_active_profile_changed *profile_ev = NULL;
-    const struct device *pwm;
+    const struct device *pwm; // old implementation
+    //static const struct pwm_dt_spec pwm = PWM_DT_SPEC_GET(DT_ALIAS(buzzer)); //new
 
     if ((profile_ev = as_zmk_ble_active_profile_changed(eh)) == NULL) {
         return ZMK_EV_EVENT_BUBBLE;
     }
-    //pwm = device_get_binding(BUZZ_LABEL); old implementation
-    pwm = DEVICE_DT_GET(DT_NODELABEL(BUZZ_LABEL));
-    /*
+    pwm = device_get_binding(BUZZ_LABEL);// old implementation
+
+    
     if (NULL == pwm) {
         return ZMK_EV_EVENT_BUBBLE;
     }
@@ -120,7 +122,7 @@ int buzzer_listener(const zmk_event_t *eh)
         default:
             break;
     }
-    */
+    
     return ZMK_EV_EVENT_BUBBLE;
 }
 
