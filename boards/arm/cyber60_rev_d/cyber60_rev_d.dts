@@ -64,7 +64,12 @@
 			};
 		};
 
-
+	// PWM buzzer config
+    buzzer: pwm_buzzer {
+        compatible = "pwm-buzzer";
+        label = "PWM BUZZER";
+		pwms = <&pwm0 23 PWM_MSEC(20) PWM_POLARITY_NORMAL>;
+    };
 	
 	pwmleds {
 		compatible = "pwm-leds";
@@ -161,22 +166,14 @@
 	status = "okay";
 };
 
-
 &pwm0 {
     status = "okay";    
 	pinctrl-0 = <&pwm0_default>;
 	pinctrl-1 = <&pwm0_sleep>;
     pinctrl-names = "default", "sleep";
 
-	// PWM buzzer config
-    buzzer: pwm_buzzer {
-        compatible = "pwm-buzzer";
-        label = "PWM BUZZER";
-		pwms = <&pwm0 23 PWM_MSEC(1) PWM_POLARITY_NORMAL>;
 
-    };
 };
-
 &spi3 {
   compatible = "nordic,nrf-spim";
   status = "okay";
