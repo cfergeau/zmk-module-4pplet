@@ -45,6 +45,14 @@
         //resolution = <2>;
     };
 
+	// PWM buzzer config
+    buzzer: pwm_buzzer {
+        compatible = "pwm-buzzer";
+		pwms = <&pwm0 23 1000 PWM_POLARITY_NORMAL>;
+		label = "PWM BUZZER";
+		status = "okay";
+    };
+
 	leds {
 			compatible = "gpio-leds";
 			led_0: led_green { // P0.05
@@ -64,40 +72,11 @@
 			};
 		};
 
-	// PWM buzzer config
-    buzzer: pwm_buzzer {
-        compatible = "pwm-buzzer";
-        label = "PWM BUZZER";
-		pwms = <&pwm0 23 PWM_MSEC(20) PWM_POLARITY_NORMAL>;
-    };
-	
-	pwmleds {
-		compatible = "pwm-leds";
-		pwm_led_0: pwm_led_green { // P0.07
-			pwms = <&pwm0 7 PWM_MSEC(20) PWM_POLARITY_NORMAL>;
-			label = "Green PWM LED";
-			status = "okay";
-		};
-		pwm_led_1: pwm_led_red { // P0.05
-			pwms = <&pwm0 5 PWM_MSEC(20) PWM_POLARITY_NORMAL>;
-			label = "Red PWM LED";
-			status = "okay";
-		};
-		pwm_led_2: pwm_led_blue { // P1.09
-			pwms = <&pwm1 9 PWM_MSEC(20) PWM_POLARITY_NORMAL>;
-			label = "Blue PWM LED";
-			status = "okay";
-		};
-	};
-
 	// These aliases are provided for compatibility with samples
 	aliases {
 		ledgreen = &led_0;
 		ledred   = &led_1;
 		ledblue  = &led_2;
-		pwmledgreen = &pwm_led_0;
-		pwmledred = &pwm_led_1;
-		pwmledblue = &pwm_led_2;
 		buzzer = &buzzer;
 	};
 
@@ -174,6 +153,7 @@
 
 
 };
+
 &spi3 {
   compatible = "nordic,nrf-spim";
   status = "okay";
@@ -196,8 +176,6 @@
         color-mapping = <LED_COLOR_ID_GREEN LED_COLOR_ID_RED LED_COLOR_ID_BLUE>;
     };
 };
-
-
 
 &flash0 {
 	/*

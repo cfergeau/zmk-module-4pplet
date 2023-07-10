@@ -40,19 +40,19 @@ LOG_MODULE_DECLARE(zmk, CONFIG_ZMK_LOG_LEVEL);
 
 #define BEEP_DURATION  K_MSEC(60)
 
-void _play(const struct device *pwm, uint32_t period)
+void _play(const struct pwm_dt_spec pwm, uint32_t period)
 {
     //pwm_pin_set_usec(pwm, BUZZ_CHANNEL, period, period / 2U, BUZZ_FLAGS); old implementation, depricated
-    pwm_set(pwm, BUZZ_CHANNEL, period, period / 2U, BUZZ_FLAGS); // attempt at new implementation
+    pwm_set_dt(&pwm, period, period / 2U); // attempt at new implementation
     k_sleep(BEEP_DURATION);
 
     //pwm_pin_set_usec(pwm, BUZZ_CHANNEL, 0, 0, BUZZ_FLAGS); old implementation, depricated
-    pwm_set(pwm, BUZZ_CHANNEL, 0, 0, BUZZ_FLAGS); // attempt at new implementation
+    pwm_set_dt(&pwm, 0, 0); // attempt at new implementation
     k_sleep(K_MSEC(50));
 
 }
 
-void play_sound_1(const struct device *pwm)
+void play_sound_1(const struct pwm_dt_spec pwm)
 {
     _play(pwm, 1000);
     _play(pwm, 500);
@@ -61,7 +61,7 @@ void play_sound_1(const struct device *pwm)
     _play(pwm, 50);
 }
 
-void play_sound_2(const struct device *pwm)
+void play_sound_2(const struct pwm_dt_spec pwm)
 {
     _play(pwm, 1500);
     _play(pwm, 3900);
@@ -69,19 +69,19 @@ void play_sound_2(const struct device *pwm)
     _play(pwm, 1500);
 }
 
-void play_sound_3(const struct device *pwm)
+void play_sound_3(const struct pwm_dt_spec pwm)
 {
     _play(pwm, 1500);
     _play(pwm, 3900);
 }
 
-void play_sound_4(const struct device *pwm)
+void play_sound_4(const struct pwm_dt_spec pwm)
 {
     _play(pwm, 2000);
     _play(pwm, 3900);
 }
 
-void play_sound_5(const struct device *pwm)
+void play_sound_5(const struct pwm_dt_spec pwm)
 {
     _play(pwm, 2500);
     _play(pwm, 3900);               
@@ -90,15 +90,23 @@ void play_sound_5(const struct device *pwm)
 int buzzer_listener(const zmk_event_t *eh)
 {
     const struct zmk_ble_active_profile_changed *profile_ev = NULL;
-    const struct device *pwm; // old implementation
+    //const struct device *pwm; // old implementation
+    static const struct pwm_dt_spec pwm = PWM_DT_SPEC_GET(BUZZER_NODE);
 
     if ((profile_ev = as_zmk_ble_active_profile_changed(eh)) == NULL) {
         return ZMK_EV_EVENT_BUBBLE;
     }
-    pwm = device_get_binding(BUZZ_LABEL);// old implementation
+    //pwm = device_get_binding(BUZZ_LABEL);// old implementation
+    pwm_set_dt(&pwm, 1000, 1000 / 2U); // attempt at new implementation
+    k_sleep(BEEP_DURATION);
 
-    
-    if (NULL == pwm) {
+    //pwm_pin_set_usec(pwm, BUZZ_CHANNEL, 0, 0, BUZZ_FLAGS); old implementation, depricated
+    pwm_set_dt(&pwm, 0, 0); // attempt at new implementation
+    k_sleep(K_MSEC(50));
+
+    if (!device_is_ready(pwm.dev)) {
+        		printk("Error: PWM device %s is not ready\n",
+		       pwm.dev->name);
         return ZMK_EV_EVENT_BUBBLE;
     }
 
